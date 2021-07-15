@@ -1,0 +1,52 @@
+<html>
+
+<head>
+    <title>Vizualizations by User</title>
+
+    <script type="text/javascript" src="https://ebi-au-1.niometrics.com/javascripts/api/tableau-2.min.js"></script>
+    <script type="text/javascript">
+        var viewNames = <%-JSON.stringify(views) %>;
+        var ticket = <%- JSON.stringify(tick)%>;
+
+        var vizList = []
+        for(i=0;i<viewNames.length;i++) {
+            vizList[i] = "https://ebi-au-1.niometrics.com/trusted/"+ticket+"/views/"+viewNames[i].workbookName+"/"+viewNames[i].viewName
+        }
+
+        var viz,
+            vizLen = vizList.length,
+            vizCount = 0;
+
+        function createViz(vizPlusMinus) {
+            var vizDiv = document.getElementById("vizContainer"),
+                options = {
+                    hideTabs: false
+                };
+
+            vizCount = vizCount + vizPlusMinus;
+
+            if (vizCount >= vizLen) {
+                vizCount = 0;
+            } else if (vizCount < 0) {
+                vizCount = vizLen - 1;
+            }
+
+            if (viz) { 
+                viz.dispose();
+            }
+
+            var vizURL = vizList[vizCount];
+            viz = new tableau.Viz(vizDiv, vizURL, options);
+        }
+    </script>
+</head>
+
+<body onload="createViz(0);">
+    <div id="vizContainer" style="width:800px; height:700px;"></div>
+    <div id="controls" style="padding:20px;">
+        <button style="width:100px;" onclick="javascript:createViz(-1);">Previous</button>
+        <button style="width:100px;" onclick="javascript:createViz(1);">Next</button>
+    </div>
+</body>
+
+</html>

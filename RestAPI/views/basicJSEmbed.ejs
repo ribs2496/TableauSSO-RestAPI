@@ -1,0 +1,36 @@
+<html>
+<head>
+
+    <title>
+        JS Embed
+    </title>
+    <script src="https://ebi-au-1.niometrics.com/javascripts/api/tableau-2.min.js"></script>
+
+    <script type="text/javascript">
+        var viewNames = <%-JSON.stringify(views) %>
+        function initViz() {
+            for(i=0;i<viewNames.length;i++) {
+                var vizDiv = document.createElement('div');
+                vizDiv.id = "vizContainer"+i
+                var containerDiv = document.getElementById("vizContainer"+i),
+                url = "https://ebi-au-1.niometrics.com/views/"+viewNames[i].workbookName+"/"+viewNames[i].viewName,
+                options = {
+                    hideTabs: true,
+                    onFirstInteractive: function () {
+                        console.log("Run this code when the viz has finished loading.");
+                    }
+                };
+                var viz = new tableau.Viz(containerDiv, url, options);
+            }
+        }
+        console.log(viewNames)
+    </script>
+</head>
+
+<body onload="initViz();">
+    
+</body>
+</html>
+
+
+
